@@ -16,14 +16,14 @@ struct CartView: View {
     var body: some View {
         //Placeholder, delete later
         Text("CartView")
-        NavigationView {
-            List {
-                ForEach(cart.cart, id: \.self) { item in
-                    Text(item.name)
-                    Text("\(item.quantity)")
-                }.onDelete(perform: deleteItem)
-            }
-        }
+//        NavigationView {
+//            List {
+//                ForEach(cart.cart, id: \.self) { item in
+//                    Text(item.name)
+//                    Text("\(item.quantity)")
+//                }.onDelete(perform: deleteItem)
+//            }
+//        }
     }
     func deleteItem(at offsets: IndexSet) {
         cart.cart.remove(atOffsets: offsets)
