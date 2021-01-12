@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5D5CC9FE25AE21BF0064A56D /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D5CC9FD25AE21BF0064A56D /* ImagePicker.swift */; };
+		5D5CCA0125AE23FC0064A56D /* AddItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D5CCA0025AE23FC0064A56D /* AddItemView.swift */; };
 		6869B6BB25A94FC600CD9A1D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6869B6BA25A94FC600CD9A1D /* AppDelegate.swift */; };
 		6869B6BD25A94FC600CD9A1D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6869B6BC25A94FC600CD9A1D /* SceneDelegate.swift */; };
 		6869B6BF25A94FC700CD9A1D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6869B6BE25A94FC700CD9A1D /* ContentView.swift */; };
@@ -22,6 +24,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5D5CC9FD25AE21BF0064A56D /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
+		5D5CCA0025AE23FC0064A56D /* AddItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItemView.swift; sourceTree = "<group>"; };
 		6869B6B725A94FC600CD9A1D /* CleverCart.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CleverCart.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6869B6BA25A94FC600CD9A1D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6869B6BC25A94FC600CD9A1D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -73,6 +77,8 @@
 				68C8037F25AA5602002ED753 /* UserHandler.swift */,
 				68C8038525AA7BE6002ED753 /* Cart.swift */,
 				68C8038325AA5907002ED753 /* ItemView.swift */,
+				5D5CCA0025AE23FC0064A56D /* AddItemView.swift */,
+				5D5CC9FD25AE21BF0064A56D /* ImagePicker.swift */,
 				6869B6BA25A94FC600CD9A1D /* AppDelegate.swift */,
 				6869B6BC25A94FC600CD9A1D /* SceneDelegate.swift */,
 				6869B6BE25A94FC700CD9A1D /* ContentView.swift */,
@@ -171,6 +177,8 @@
 				6869B6CF25A958E300CD9A1D /* SignUpView.swift in Sources */,
 				68C8038425AA5907002ED753 /* ItemView.swift in Sources */,
 				6869B6BD25A94FC600CD9A1D /* SceneDelegate.swift in Sources */,
+				5D5CC9FE25AE21BF0064A56D /* ImagePicker.swift in Sources */,
+				5D5CCA0125AE23FC0064A56D /* AddItemView.swift in Sources */,
 				6869B6BF25A94FC700CD9A1D /* ContentView.swift in Sources */,
 				68C8038625AA7BE6002ED753 /* Cart.swift in Sources */,
 			);
