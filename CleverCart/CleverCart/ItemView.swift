@@ -21,7 +21,7 @@ struct ItemView: View {
                 
                 Text("Go to cart")
                     .onTapGesture {
-                        screen = 3
+                        self.screen = 3
                     }
             }
             
@@ -40,7 +40,7 @@ struct ItemView: View {
                         Button("Add") {
                             Image(systemName: "plus")
                             .onTapGesture {
-                                    handler.addItem(token: "", name: item.name, quantity: "\(item.quantity)", link: "https://hkp-ios-demo-api.herokuapp.com/items/create")
+                                self.handler.addItem(token: "", name: item.name, quantity: "\(item.quantity)", link: "https://hkp-ios-demo-api.herokuapp.com/items/create")
                             }
                         }
                     }
