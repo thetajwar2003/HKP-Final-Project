@@ -22,7 +22,7 @@ struct AddItemView: View {
     var saveButton: some View {
         Button("Save") {
             //will need to update this later
-            handler.addItem(token: "", name: self.name, quantity: "\(self.quantity)", link: "https://hkp-ios-demo-api.herokuapp.com/items/create")
+//             handler.addItem(token: "", name: self.name, quantity: "\(self.quantity)", link: "https://hkp-ios-demo-api.herokuapp.com/items/create")
         }
     }
     

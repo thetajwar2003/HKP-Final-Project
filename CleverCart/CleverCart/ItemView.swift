@@ -9,7 +9,6 @@
 import SwiftUI
 
 struct ItemView: View {
-    @Binding var screen: Int
     @State private var items = Items()
     @State private var showingImagePicker = false
     @State private var addingNewItem = false
@@ -19,7 +18,6 @@ struct ItemView: View {
     @State private var isAdmin = true
     
     @State private var inputImage: UIImage?
-    @ObservedObject var handler = UserHandler()
     
     
     var addNewItem: some View {
@@ -42,12 +40,12 @@ struct ItemView: View {
             Image("cart")
                 .padding(10)
         }
-        .sheet(isPresented: $goingToCart) {
+//        .sheet(isPresented: $goingToCart) {
             //temporary
-            CartView(screen: self.$screen, cart: Cart())
+//            CartView(screen: self.$screen, cart: Cart())
 
 //            self.screen = 3
-        }
+//        }
     }
     
     var body: some View {

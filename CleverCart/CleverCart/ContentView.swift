@@ -9,31 +9,44 @@
 import SwiftUI
 
 struct ContentView: View {
-    @ObservedObject var items = Items()
-    @State private var screen = 0
-    @ObservedObject var cart = Cart()
+    @EnvironmentObject var token: FetchToken
+    @State private var generatedToken: Token
     var body: some View {
-        Group {
-            if screen == 0 {
-                LoginView(screen: $screen)
+        if (token.token != nil) {
+            if(token.isAdmin) {
+                AdminView()
             }
-            if screen == 1{
-                SignUpView(screen: $screen)
-            }
-            if screen == 2{
-                ItemView(screen: $screen)
-            }
-            if screen == 3{
-                CartView(screen: $screen, cart: cart)
+            else {
+                UserView()
             }
         }
-        .environmentObject(items)
-        .environmentObject(cart)
+        return NavigationView {
+            VStack {
+                NavigationLink(destination: LoginView(generatedToken: $generatedToken)) {
+                    Text("Login")
+                        .font(.caption)
+                        .fontWeight(.black)
+                        .padding()
+                        .foregroundColor(.white)
+                        .background(Color.blue.opacity(0.75))
+                        .clipShape(Capsule())
+                }
+                NavigationLink(destination: SignUpView(generatedToken: $generatedToken)){
+                    Text("Sign Up")
+                        .font(.caption)
+                        .fontWeight(.black)
+                        .padding()
+                        .foregroundColor(.white)
+                        .background(Color.blue.opacity(0.75))
+                        .clipShape(Capsule())
+                }
+            }// add bar title
+        }
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
-}
+//struct ContentView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ContentView()
+//    }
+//}
