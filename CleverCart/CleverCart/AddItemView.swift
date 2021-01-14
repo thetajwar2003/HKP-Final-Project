@@ -9,22 +9,16 @@
 import SwiftUI
 
 struct AddItemView: View {
+    @Binding var items: Items
     @State private var showingImagePicker = false
-    @ObservedObject var handler = UserHandler()
     
     @State private var name = ""
     @State private var price = ""
     @State private var details = ""
     @State private var inputImage: UIImage?
-    let id = UUID()
-    let quantity: Int
-    
-    var saveButton: some View {
-        Button("Save") {
-            //will need to update this later
-//             handler.addItem(token: "", name: self.name, quantity: "\(self.quantity)", link: "https://hkp-ios-demo-api.herokuapp.com/items/create")
-        }
-    }
+    @State private var quantity = 1
+
+    let id = UUID().uuidString
     
     var body: some View {
         NavigationView {
@@ -60,16 +54,60 @@ struct AddItemView: View {
                         TextField("Price", text: $price)
                         TextField("Details", text: $details)
                     }
+                    Section(header: Text("Quantity")) {
+                        Stepper(value: $quantity, in: 1...10, step: 1) {
+                            Text("\(quantity)")
+                        }
+                    }
                 }
             }
-            .navigationBarTitle(Text("Add Item"), displayMode: .inline)
-            .navigationBarItems(trailing: saveButton)
+            .navigationBarTitle(Text("Add Item"))
+            .navigationBarItems(trailing:
+                Button("Save") {
+                    let newItem = Item(id: id, name: name, description: details, quantity: quantity)
+                    addItem(item: newItem)
+                }
+            )
         }
+    }
+    
+    func addItem(item: Item) {
+        items.items.append(item)
+        self.updateItems()
+    }
+    
+    // updates items to add the new item in the api
+    func updateItems() {
+        let jsonifyItems = self.items
+        
+        guard let encoded = try? JSONEncoder().encode(jsonifyItems) else { return }
+        
+        let url = URL(string: "")! // BACKEND PART items/add
+        var req = URLRequest(url: url)
+        req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        req.httpMethod = "POST"
+        req.httpBody = encoded
+        
+        URLSession.shared.dataTask(with: req) { data, response, error in
+            guard let data = data else {
+                print("No response")
+                return
+            }
+            
+            if let decoded = try? JSONDecoder().decode(Message.self, from: data) {
+                DispatchQueue.main.async {
+                    print(decoded.message)
+                }
+            }
+            else {
+                print("No response from server")
+            }
+        }.resume()
     }
 }
 
-struct AddItemView_Previews: PreviewProvider {
-    static var previews: some View {
-        AddItemView(quantity: Int())
-    }
-}
+//struct AddItemView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        AddItemView(items: Items())
+//    }
+//}

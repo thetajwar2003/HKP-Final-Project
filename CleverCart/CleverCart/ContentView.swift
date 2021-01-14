@@ -9,8 +9,9 @@
 import SwiftUI
 
 struct ContentView: View {
+
     @EnvironmentObject var token: FetchToken
-    @State private var generatedToken: Token
+    @State var generatedToken: Token
     var body: some View {
         if (token.token != nil) {
             if(token.isAdmin) {

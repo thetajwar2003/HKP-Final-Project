@@ -16,18 +16,18 @@ struct UserView: View {
     var body: some View {
         TabView {
             // shows list of all products available
-            ItemView(items: $items) // TODO pass in cart to add item to cart and remember to post!!
+            UserItemView(items: $items, cart: $cart) // TODO pass in cart to add item to cart and remember to post!!
                 .tabItem {
                     Image(systemName: "list.dash")
                     Text("Store")
-            }
+                }
             
             // shows list of items in a user's cart
             CartView(cart: $cart)
                 .tabItem {
                     Image(systemName: "cart.fill")
                     Text("Cart")
-            }
+                }
         }
         // rhs button allows user to logout, lhs button allows user to refresh page
         .navigationBarItems(leading: Button("Logout") {
