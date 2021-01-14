@@ -31,7 +31,7 @@ struct UserItemView: View {
                         Button("Add") {
                             Image(systemName: "plus")
                                 .onTapGesture {
-                                    addItem(item: item)
+                                    self.addItem(item: item)
                                 }
                         }
                     }

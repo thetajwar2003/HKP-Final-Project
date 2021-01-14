@@ -64,8 +64,9 @@ struct AddItemView: View {
             .navigationBarTitle(Text("Add Item"))
             .navigationBarItems(trailing:
                 Button("Save") {
-                    let newItem = Item(id: id, name: name, description: details, quantity: quantity)
-                    addItem(item: newItem)
+                    let newItem = Item(id: self.id, name: self.name, description: self.details, quantity: self.quantity)
+                    
+                    self.addItem(item: newItem)
                 }
             )
         }
@@ -94,9 +95,10 @@ struct AddItemView: View {
                 return
             }
             
-            if let decoded = try? JSONDecoder().decode(Message.self, from: data) {
+            if let decoded = try? JSONDecoder().decode(Items.self, from: data) {
                 DispatchQueue.main.async {
-                    print(decoded.message)
+                    print(decoded)
+                    self.items = decoded
                 }
             }
             else {
