@@ -32,12 +32,11 @@ struct Items: Codable {
     }
 }
 
-struct FetchCart: Codable {
+struct PostItem: Codable {
+    var token: String
+    var item: Item
+}
+struct PostCart: Codable {
     var token: String
     var cart: [Item]
-}
-
-struct FetchItems: Codable {
-    var token: String
-    var items: [Item]
 }

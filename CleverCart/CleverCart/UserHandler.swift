@@ -14,16 +14,16 @@ struct User: Codable {
     var admin: Bool = false
 }
 
-struct Token: Codable {
-    var token: String
-}
-
 struct Admin: Decodable {
     var isAdmin: Bool
 }
 
 struct Message: Codable {
     var message: String
+}
+
+struct Token: Codable {
+    var token: String
 }
 
 class FetchToken: ObservableObject {
@@ -37,12 +37,12 @@ class FetchToken: ObservableObject {
         }
         
         let url = URL(string: "")! // BACKEND URL  -> users/admin: return true or false
-         var request = URLRequest(url: url)
-       request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpMethod = "POST"
-        request.httpBody = encoded
+        var req = URLRequest(url: url)
+        req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        req.httpMethod = "POST"
+        req.httpBody = encoded
         
-        URLSession.shared.dataTask(with: request) { data, response, error in
+        URLSession.shared.dataTask(with: req) { data, response, error in
             guard let data = data else {
                 print("No data in response: \(error?.localizedDescription ?? "Unknown error").")
                 return
