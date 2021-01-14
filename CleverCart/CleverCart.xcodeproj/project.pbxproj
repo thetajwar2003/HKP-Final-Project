@@ -22,7 +22,7 @@
 		68B3DF8F25AEA57F00D11503 /* AdminItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68B3DF8E25AEA57F00D11503 /* AdminItemView.swift */; };
 		68B3DF9125AEA6B100D11503 /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68B3DF9025AEA6B100D11503 /* UserView.swift */; };
 		68C8038025AA5602002ED753 /* UserHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68C8037F25AA5602002ED753 /* UserHandler.swift */; };
-		68C8038425AA5907002ED753 /* ItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68C8038325AA5907002ED753 /* ItemView.swift */; };
+		68C8038425AA5907002ED753 /* UserItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68C8038325AA5907002ED753 /* UserItemView.swift */; };
 		68C8038825AA9469002ED753 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68C8038725AA9469002ED753 /* LoginView.swift */; };
 /* End PBXBuildFile section */
 
@@ -44,7 +44,7 @@
 		68B3DF8E25AEA57F00D11503 /* AdminItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminItemView.swift; sourceTree = "<group>"; };
 		68B3DF9025AEA6B100D11503 /* UserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserView.swift; sourceTree = "<group>"; };
 		68C8037F25AA5602002ED753 /* UserHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHandler.swift; sourceTree = "<group>"; };
-		68C8038325AA5907002ED753 /* ItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemView.swift; sourceTree = "<group>"; };
+		68C8038325AA5907002ED753 /* UserItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserItemView.swift; sourceTree = "<group>"; };
 		68C8038725AA9469002ED753 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -81,7 +81,7 @@
 				6869B6CE25A958E300CD9A1D /* SignUpView.swift */,
 				6869B6D025A95C2E00CD9A1D /* CartView.swift */,
 				68C8037F25AA5602002ED753 /* UserHandler.swift */,
-				68C8038325AA5907002ED753 /* ItemView.swift */,
+				68C8038325AA5907002ED753 /* UserItemView.swift */,
 				68B3DF8A25AE87EE00D11503 /* Item.swift */,
 				5D5CCA0025AE23FC0064A56D /* AddItemView.swift */,
 				68B3DF8C25AEA45A00D11503 /* AdminView.swift */,
@@ -185,7 +185,7 @@
 				68C8038825AA9469002ED753 /* LoginView.swift in Sources */,
 				68B3DF8B25AE87EE00D11503 /* Item.swift in Sources */,
 				6869B6CF25A958E300CD9A1D /* SignUpView.swift in Sources */,
-				68C8038425AA5907002ED753 /* ItemView.swift in Sources */,
+				68C8038425AA5907002ED753 /* UserItemView.swift in Sources */,
 				68B3DF9125AEA6B100D11503 /* UserView.swift in Sources */,
 				6869B6BD25A94FC600CD9A1D /* SceneDelegate.swift in Sources */,
 				68B3DF8D25AEA45A00D11503 /* AdminView.swift in Sources */,

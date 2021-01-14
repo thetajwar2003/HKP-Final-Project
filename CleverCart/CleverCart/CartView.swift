@@ -60,9 +60,10 @@ struct CartView: View {
                 return
             }
             
-            if let decoded = try? JSONDecoder().decode(Message.self, from: data) {
+            if let decoded = try? JSONDecoder().decode(Items.self, from: data) {
                 DispatchQueue.main.async {
-                    print(decoded.message)
+                    print(decoded)
+                    self.cart = decoded
                 }
             }
             else {

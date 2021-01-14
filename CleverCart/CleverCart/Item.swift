@@ -9,7 +9,7 @@
 import Foundation
 import SwiftUI
 
-struct Item: Codable, Equatable {
+struct Item: Codable, Equatable, Hashable {
     var id: String
     var name: String
     var description: String
