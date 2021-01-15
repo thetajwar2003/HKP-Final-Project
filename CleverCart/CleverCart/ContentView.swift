@@ -23,25 +23,56 @@ struct ContentView: View {
         }
         return NavigationView {
             VStack {
+                Spacer()
+                Image("tree")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: UIScreen.main.bounds.width/2, height: UIScreen.main.bounds.width/2)
+                Text("Tree Store")
+                    .font(.largeTitle)
+                    .fontWeight(.black)
+                    .foregroundColor(Color.green)
+                    .padding(16)
+                Text("Save some green while getting your greens")
+                    .font(.system(size: 18.0))
+                    .bold()
+                    .foregroundColor(Color.green)
+//                    .frame(width: UIScreen.main.bounds.width * 0.8)
+                    .multilineTextAlignment(.center)
+                    .padding(4)
+                
+                Text("Your one stop shop for all your tree-related needs 🌲")
+                    .font(.system(size: 16.0))
+                    .frame(width: UIScreen.main.bounds.width * 0.8)
+                    .multilineTextAlignment(.center)
+                Spacer()
+                
+                
                 NavigationLink(destination: LoginView(generatedToken: $generatedToken)) {
                     Text("Login")
-                        .font(.caption)
                         .fontWeight(.black)
-                        .padding()
-                        .foregroundColor(.white)
-                        .background(Color.blue.opacity(0.75))
+                        .foregroundColor(.green)
+                        .frame(width: UIScreen.main.bounds.width * 0.75, height: UIScreen.main.bounds.width * 0.125)
                         .clipShape(Capsule())
+                        .overlay(
+                            Capsule()
+                                .stroke(Color.green)
+                        )
+                        .padding(4)
                 }
+                
                 NavigationLink(destination: SignUpView(generatedToken: $generatedToken)){
                     Text("Sign Up")
-                        .font(.caption)
                         .fontWeight(.black)
-                        .padding()
+                        .frame(width: UIScreen.main.bounds.width * 0.75, height: UIScreen.main.bounds.width * 0.125)
                         .foregroundColor(.white)
-                        .background(Color.blue.opacity(0.75))
+                        .background(Color.green)
                         .clipShape(Capsule())
                 }
+                Spacer()
+                
             }// add bar title
+//            .navigationBarTitle("Tree Store")
         }
     }
 }

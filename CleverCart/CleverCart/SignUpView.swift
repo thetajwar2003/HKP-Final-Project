@@ -24,13 +24,16 @@ struct SignUpView: View {
     
     var body: some View {
         NavigationView {
+            
             VStack () {
-                TextField("Username", text: $username)
-                SecureField("Password", text: $password)
-                SecureField("Re-Enter Password", text: $reEnterPass)
-                
-                Toggle(isOn: $admin){
-                    Text("Admin")
+                Form {
+                    TextField("Username", text: $username)
+                    SecureField("Password", text: $password)
+                    SecureField("Re-Enter Password", text: $reEnterPass)
+                    
+                    Toggle(isOn: $admin){
+                        Text("Admin")
+                    }
                 }
                     
                 Button("Sign Up") {
@@ -45,7 +48,10 @@ struct SignUpView: View {
                 .alert(isPresented: $showingAlert){
                     Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("Ok")))
                 }
+                .foregroundColor(.green)
+                .padding(12)
             }
+            .navigationBarTitle("Welcome!")
         }
     }
     func authenticate() {

@@ -24,10 +24,15 @@ struct LoginView: View {
         NavigationView {
             VStack {
                 // TODO make UI cleaner
+                Form {
+                    
+                    // allows user to enter their creds and verifies the user
+                    TextField("Username", text: $username)
+                    SecureField("Password", text: $password)
+                    
+                    
+                }
                 
-                // allows user to enter their creds and verifies the user
-                TextField("Username", text: $username)
-                SecureField("Password", text: $password)
                 Button("Login") {
                     self.verify()
                     // may need while loop depending on threads
@@ -40,8 +45,12 @@ struct LoginView: View {
                 .alert(isPresented: $showingAlert){
                     Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("Ok")))
                 }
+                .foregroundColor(.green)
+                .padding(12)
             }
+            .navigationBarTitle("Welcome back!")
         }
+        
     }
     func verify() {
         // createUser func checks if the fields are empty; if they aren't create an User object for the current user
