@@ -39,6 +39,7 @@ struct LoginView: View {
                             .stroke(Color.green)
                     )
                     .padding(4)
+                
                 SecureField("Password", text: $password)
                     .padding(.leading)
                     .foregroundColor(.green)
@@ -49,7 +50,6 @@ struct LoginView: View {
                             .stroke(Color.green)
                     )
                     .padding(4)
-                    
                     
                 Button("Login") {
                     self.verify()
@@ -74,8 +74,9 @@ struct LoginView: View {
                 Spacer()
             }
         }
-        
+        .accentColor( .black)
     }
+    
     func verify() {
         // createUser func checks if the fields are empty; if they aren't create an User object for the current user
         func setUser() -> Bool {

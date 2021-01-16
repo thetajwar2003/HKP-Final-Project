@@ -95,6 +95,7 @@ struct SignUpView: View {
                 Spacer()
             }
         }
+        .accentColor(.green)
     }
     func authenticate() {
         // checks if the fields are empty and if the password fields are the same

@@ -71,9 +71,9 @@ struct ContentView: View {
                 }
                 Spacer()
                 
-            }// add bar title
-//            .navigationBarTitle("Tree Store")
+            }
         }
+        .accentColor( .green)
     }
 }
 
