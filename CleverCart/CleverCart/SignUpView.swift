@@ -9,8 +9,10 @@
 import SwiftUI
 
 struct SignUpView: View {
+    @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var token: FetchToken
-    @Binding var generatedToken: Token
+//    @Binding var generatedToken: Token
+    
     @State private var username = ""
     @State private var password = ""
     @State private var reEnterPass = ""
@@ -75,11 +77,23 @@ struct SignUpView: View {
                 Button("Sign Up") {
                     self.authenticate()
                     // may need while loop depending on threads
-                    if (self.generatedToken.token != "") {
-                        self.token.token = Token(token: self.generatedToken.token)
-                        self.generatedToken = Token(token: "")
-                        self.token.fetchAdmin()
-                    }
+//                    print("Up: \(self.generatedToken.token)")
+//                    print("Up: \(self.generatedToken.adminInfo)")
+//
+//                    print("if: \(self.generatedToken.token != "")")
+//                    if (self.generatedToken.token != "") {
+//                        self.token.token?.token = self.generatedToken.token
+//                        self.token.isAdmin = self.generatedToken.adminInfo
+//
+//
+//                        print(self.token.token?.token)
+//                        print(self.generatedToken.token)
+//                        print(self.token.isAdmin)
+//                        print(self.generatedToken.adminInfo)
+
+//                        self.generatedToken = Token(token: "")
+//                        self.token.fetchAdmin()
+//                    }
                 }
                 .alert(isPresented: $showingAlert){
                     Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("Ok")))
@@ -102,7 +116,7 @@ struct SignUpView: View {
         func createUser() -> Bool {
             guard !self.username.trimmingCharacters(in: .whitespaces).isEmpty && !self.password.trimmingCharacters(in: .whitespaces).isEmpty else { return false }
             guard self.password == self.reEnterPass else { return false }
-            user = User(username: self.username, password: self.password, admin: self.admin)
+            user = User(username: self.username, password: self.password, isAdmin: self.admin)
             return true
         }
         
@@ -120,14 +134,16 @@ struct SignUpView: View {
             self.showingAlert = true
             return
         }
+//        print(user)
         
-        let url = URL(string: "")! // BACKEND URL NEEDED FOR USER TOKEN -> users/signup: returns token
+        let url = URL(string: "https://storefronthkp.herokuapp.com/users/create")! // BACKEND URL NEEDED FOR USER TOKEN -> users/signup: returns token
         var req = URLRequest(url: url)
         req.setValue("application/json", forHTTPHeaderField: "Content-Type")
         req.httpMethod = "POST"
         req.httpBody = encoded
         
         URLSession.shared.dataTask(with: req) { data, response, error in
+
             guard let data = data else {
                 self.alertTitle = "Server Error"
                 self.alertMessage = "Couldn't retrieve token"
@@ -137,28 +153,49 @@ struct SignUpView: View {
             
             // if token is returned properly set the var to toke returned
             if let decoded = try? JSONDecoder().decode(Token.self, from: data) {
+//                print(decoded)
                 DispatchQueue.main.async {
-                    self.generatedToken = decoded
+//                    self.generatedToken.token = decoded.token
+//                    self.generatedToken.adminInfo = decoded.adminInfo
+                    
+//                    print("Deded: \(decoded.token)")
+//                    print("Decoded: \(decoded.adminInfo)")
+//                    print("Signup:\(self.generatedToken.token)")
+//                    print(self.generatedToken.adminInfo)
+                    
+//                    self.token.token?.token = decoded.token
+//                    self.token.isAdmin = decoded.adminInfo
+                    
+                    self.token.token = Token(token: decoded.token, adminInfo: decoded.adminInfo)
+                    self.token.isAdmin = decoded.adminInfo
+
+//                    if(self.generatedToken.token != nil){
+                    if(self.token.token?.token != nil){
+                        self.presentationMode.wrappedValue.dismiss()
+                    }
                 }
             }
                 
             // token isn't returned so user is not found maybe
             else if let decoded = try? JSONDecoder().decode(Message.self, from: data){
+                print(decoded)
                 DispatchQueue.main.async{
                     self.alertTitle = "User could not be created"
-                    self.alertMessage = "\(decoded.message)"
+                    self.alertMessage = "\(decoded.Message)"
                     self.showingAlert.toggle()
                 }
                return
             }
             
             // something went supa wrong
-            else {
+            else if let decoded = try? JSONDecoder().decode(Error.self, from: data){
+                print(decoded)
                 DispatchQueue.main.async{
-                    self.alertTitle = "Unknown Error"
-                    self.alertMessage = "Unknown repsonse from server"
+                    self.alertTitle = "User could not be created"
+                    self.alertMessage = "\(decoded.ErrorType)"
                     self.showingAlert.toggle()
                 }
+               return
             }
         }.resume()
     }

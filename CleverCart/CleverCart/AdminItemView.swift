@@ -55,7 +55,7 @@ struct AdminItemView: View {
             
             if let decoded = try? JSONDecoder().decode(Message.self, from: data) {
                 DispatchQueue.main.async {
-                    print(decoded.message)
+                    print(decoded.Message)
                 }
             }
             else {

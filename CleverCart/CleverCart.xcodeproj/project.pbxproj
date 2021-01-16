@@ -80,10 +80,10 @@
 			children = (
 				6869B6CE25A958E300CD9A1D /* SignUpView.swift */,
 				6869B6D025A95C2E00CD9A1D /* CartView.swift */,
-				68C8037F25AA5602002ED753 /* UserHandler.swift */,
 				68C8038325AA5907002ED753 /* UserItemView.swift */,
 				68B3DF8A25AE87EE00D11503 /* Item.swift */,
 				5D5CCA0025AE23FC0064A56D /* AddItemView.swift */,
+				68C8037F25AA5602002ED753 /* UserHandler.swift */,
 				68B3DF8C25AEA45A00D11503 /* AdminView.swift */,
 				68B3DF8E25AEA57F00D11503 /* AdminItemView.swift */,
 				5D5CC9FD25AE21BF0064A56D /* ImagePicker.swift */,
