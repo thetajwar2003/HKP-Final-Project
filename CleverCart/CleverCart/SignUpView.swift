@@ -26,15 +26,51 @@ struct SignUpView: View {
         NavigationView {
             
             VStack () {
-                Form {
+                    Text("Welcome!")
+                        .font(.largeTitle)
+                        .foregroundColor(.green)
+                        .padding(16)
+                
                     TextField("Username", text: $username)
+                        .padding(.leading)
+                        .foregroundColor(.green)
+                        .frame(width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.width * 0.1)
+                        .clipShape(Capsule())
+                        .overlay(
+                            Capsule()
+                                .stroke(Color.green)
+                        )
+                        .padding(4)
+                
                     SecureField("Password", text: $password)
+                        .padding(.leading)
+                        .foregroundColor(.green)
+                        .frame(width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.width * 0.1)
+                        .clipShape(Capsule())
+                        .overlay(
+                            Capsule()
+                                .stroke(Color.green)
+                        )
+                        .padding(4)
+                
                     SecureField("Re-Enter Password", text: $reEnterPass)
+                        .padding(.leading)
+                        .foregroundColor(.green)
+                        .frame(width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.width * 0.1)
+                        .clipShape(Capsule())
+                        .overlay(
+                            Capsule()
+                                .stroke(Color.green)
+                        )
+                        .padding(4)
                     
                     Toggle(isOn: $admin){
                         Text("Admin")
+                            .padding(.leading)
                     }
-                }
+                    .frame(width: UIScreen.main.bounds.width * 0.8)
+                    .padding(4)
+                
                     
                 Button("Sign Up") {
                     self.authenticate()
@@ -48,10 +84,16 @@ struct SignUpView: View {
                 .alert(isPresented: $showingAlert){
                     Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("Ok")))
                 }
-                .foregroundColor(.green)
-                .padding(12)
+
+                .foregroundColor(.white)
+                .font(.headline)
+                .padding()
+                .background(Color.green)
+                .clipShape(Capsule())
+                .padding(.top)
+                
+                Spacer()
             }
-            .navigationBarTitle("Welcome!")
         }
     }
     func authenticate() {
