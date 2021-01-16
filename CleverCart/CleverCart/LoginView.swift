@@ -23,11 +23,34 @@ struct LoginView: View {
     var body: some View {
         NavigationView {
             VStack {
-                // TODO make UI cleaner
-                
+                Text("Welcome Back!")
+                    .font(.largeTitle)
+                    .foregroundColor(.green)
+                    .padding(16)
+                    
                 // allows user to enter their creds and verifies the user
                 TextField("Username", text: $username)
+                    .padding(.leading)
+                    .foregroundColor(.green)
+                    .frame(width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.width * 0.1)
+                    .clipShape(Capsule())
+                    .overlay(
+                        Capsule()
+                            .stroke(Color.green)
+                    )
+                    .padding(4)
+                
                 SecureField("Password", text: $password)
+                    .padding(.leading)
+                    .foregroundColor(.green)
+                    .frame(width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.width * 0.1)
+                    .clipShape(Capsule())
+                    .overlay(
+                        Capsule()
+                            .stroke(Color.green)
+                    )
+                    .padding(4)
+                    
                 Button("Login") {
                     self.verify()
                     // may need while loop depending on threads
@@ -40,9 +63,20 @@ struct LoginView: View {
                 .alert(isPresented: $showingAlert){
                     Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("Ok")))
                 }
+
+                .foregroundColor(.white)
+                .font(.headline)
+                .padding()
+                .background(Color.green)
+                .clipShape(Capsule())
+                .padding(.top)
+                
+                Spacer()
             }
         }
+        .accentColor( .black)
     }
+    
     func verify() {
         // createUser func checks if the fields are empty; if they aren't create an User object for the current user
         func setUser() -> Bool {
