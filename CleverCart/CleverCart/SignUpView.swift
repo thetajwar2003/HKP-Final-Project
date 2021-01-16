@@ -11,7 +11,6 @@ import SwiftUI
 struct SignUpView: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var token: FetchToken
-//    @Binding var generatedToken: Token
     
     @State private var username = ""
     @State private var password = ""
@@ -76,24 +75,6 @@ struct SignUpView: View {
                     
                 Button("Sign Up") {
                     self.authenticate()
-                    // may need while loop depending on threads
-//                    print("Up: \(self.generatedToken.token)")
-//                    print("Up: \(self.generatedToken.adminInfo)")
-//
-//                    print("if: \(self.generatedToken.token != "")")
-//                    if (self.generatedToken.token != "") {
-//                        self.token.token?.token = self.generatedToken.token
-//                        self.token.isAdmin = self.generatedToken.adminInfo
-//
-//
-//                        print(self.token.token?.token)
-//                        print(self.generatedToken.token)
-//                        print(self.token.isAdmin)
-//                        print(self.generatedToken.adminInfo)
-
-//                        self.generatedToken = Token(token: "")
-//                        self.token.fetchAdmin()
-//                    }
                 }
                 .alert(isPresented: $showingAlert){
                     Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("Ok")))
@@ -134,9 +115,8 @@ struct SignUpView: View {
             self.showingAlert = true
             return
         }
-//        print(user)
         
-        let url = URL(string: "https://storefronthkp.herokuapp.com/users/create")! // BACKEND URL NEEDED FOR USER TOKEN -> users/signup: returns token
+        let url = URL(string: "https://storefronthkp.herokuapp.com/users/create")!
         var req = URLRequest(url: url)
         req.setValue("application/json", forHTTPHeaderField: "Content-Type")
         req.httpMethod = "POST"
@@ -153,23 +133,9 @@ struct SignUpView: View {
             
             // if token is returned properly set the var to toke returned
             if let decoded = try? JSONDecoder().decode(Token.self, from: data) {
-//                print(decoded)
                 DispatchQueue.main.async {
-//                    self.generatedToken.token = decoded.token
-//                    self.generatedToken.adminInfo = decoded.adminInfo
-                    
-//                    print("Deded: \(decoded.token)")
-//                    print("Decoded: \(decoded.adminInfo)")
-//                    print("Signup:\(self.generatedToken.token)")
-//                    print(self.generatedToken.adminInfo)
-                    
-//                    self.token.token?.token = decoded.token
-//                    self.token.isAdmin = decoded.adminInfo
-                    
                     self.token.token = Token(token: decoded.token, adminInfo: decoded.adminInfo)
-                    self.token.isAdmin = decoded.adminInfo
-
-//                    if(self.generatedToken.token != nil){
+    
                     if(self.token.token?.token != nil){
                         self.presentationMode.wrappedValue.dismiss()
                     }

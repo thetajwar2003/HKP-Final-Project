@@ -10,14 +10,12 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var token: FetchToken
-    
-    @State var generatedToken: Token
-    @State var isAdmin: Bool
+
     
     var body: some View {
         ZStack {
             if (token.token?.token != nil) {
-                if(token.isAdmin) {
+                if(token.token!.adminInfo) {
                     AdminView()
                 }
                 else {

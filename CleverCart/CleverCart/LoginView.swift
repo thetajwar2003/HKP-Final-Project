@@ -9,9 +9,8 @@
 import SwiftUI
 
 struct LoginView: View {
+    @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var token: FetchToken
-//    @Binding var generatedToken: Token
-//    @Binding var isAdmin: Bool
     
     @State private var username = ""
     @State private var password = ""
@@ -55,12 +54,6 @@ struct LoginView: View {
                     
                 Button("Login") {
                     self.verify()
-                    // may need while loop depending on threads
-//                    if (self.generatedToken.token != "") {
-//                        self.token.token?.token =  self.generatedToken.token
-//                        self.generatedToken = Token(token: "", adminInfo: false)
-//                        self.token.fetchAdmin()
-//                    }
                 }
                 .alert(isPresented: $showingAlert){
                     Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("Ok")))
@@ -103,7 +96,7 @@ struct LoginView: View {
             return
         }
         
-        let url = URL(string: "https://storefronthkp.herokuapp.com/users/login")! // BACKEND URL NEEDED FOR USER TOKEN -> users/login: returns token
+        let url = URL(string: "https://storefronthkp.herokuapp.com/users/login")!
         var req = URLRequest(url: url)
         req.setValue("application/json", forHTTPHeaderField: "Content-Type")
         req.httpMethod = "POST"
@@ -120,8 +113,11 @@ struct LoginView: View {
             // if token is returned properly set the var to toke returned
             if let decoded = try? JSONDecoder().decode(Token.self, from: data) {
                 DispatchQueue.main.async {
-//                    self.generatedToken.token = decoded.token
-//                    self.generatedToken.adminInfo = decoded.adminInfo
+                    self.token.token = Token(token: decoded.token, adminInfo: decoded.adminInfo)
+
+                    if(self.token.token?.token != nil){
+                        self.presentationMode.wrappedValue.dismiss()
+                    }
                 }
             }
                 
@@ -136,12 +132,14 @@ struct LoginView: View {
             }
             
             // something went supa wrong
-            else {
+            else if let decoded = try? JSONDecoder().decode(Error.self, from: data){
+                print(decoded)
                 DispatchQueue.main.async{
-                    self.alertTitle = "Unknown Error"
-                    self.alertMessage = "Unknown repsonse from server"
+                    self.alertTitle = "User could not be created"
+                    self.alertMessage = "\(decoded.ErrorType)"
                     self.showingAlert.toggle()
                 }
+               return
             }
         }.resume()
     }
