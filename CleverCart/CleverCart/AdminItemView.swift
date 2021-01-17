@@ -14,14 +14,14 @@ struct AdminItemView: View {
     var body: some View {
         NavigationView {
             List {
-                ForEach(items.items, id: \.self) { item in
+                ForEach(items.allItems, id: \._id) { item in
                     HStack {
                         //add image
                         VStack {
                             Text("\(item.name)")
                                 .font(.title)
-//                            Text("\(item.price)")
-                            Text("Quantity: \(item.quantity)")
+                            Text("\(item.price)")
+//                            Text("Quantity: \(item.quantity)")
                         }
                     }
                 }
@@ -32,12 +32,12 @@ struct AdminItemView: View {
     }
     
     func removeItem(at offsets: IndexSet) {
-        items.items.remove(atOffsets: offsets)
+        items.allItems.remove(atOffsets: offsets)
         self.updateItems()
     }
     
     func updateItems() {
-        let jsonifyItems = Items(items: items.items)
+        let jsonifyItems = Items(allItems: items.allItems)
         
         guard let encoded = try? JSONEncoder().encode(jsonifyItems) else { return }
         
@@ -55,7 +55,7 @@ struct AdminItemView: View {
             
             if let decoded = try? JSONDecoder().decode(Message.self, from: data) {
                 DispatchQueue.main.async {
-                    print(decoded.message)
+                    print(decoded.Message)
                 }
             }
             else {

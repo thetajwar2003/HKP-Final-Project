@@ -19,7 +19,7 @@ struct AdminView: View {
                 .tabItem {
                     Image(systemName: "list.dash")
                     Text("Products")
-                }
+                }.onAppear{self.fetchItems()}
             
             // allows admins to add items
             AddItemView(items: $items)
@@ -36,17 +36,12 @@ struct AdminView: View {
         })
     }
     
+    // retrieves all the products in the store
     func fetchItems() {
-        guard let encoded = try? JSONEncoder().encode(token.token) else {
-            print("error encoding token")
-            return
-        }
-        
-        let url = URL(string: "")! // BACKEND URL NEEDED -> /item: returns a list of items
+        let url = URL(string: "https://storefronthkp.herokuapp.com/items/get/all")!
         var req = URLRequest(url: url)
-        req.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        req.httpMethod = "POST"
-        req.httpBody = encoded
+        req.addValue("Bearer \(self.token.token!.token)", forHTTPHeaderField: "Authorization")
+        req.httpMethod = "GET"
         
         URLSession.shared.dataTask(with: req) { data, response, error in
             guard let data = data else {
@@ -55,10 +50,24 @@ struct AdminView: View {
             }
             if let decoded = try? JSONDecoder().decode(Items.self, from: data) {
                 DispatchQueue.main.async {
-                    self.items = decoded
+                    self.items.allItems = decoded.allItems
                 }
-            } else {
-                print("Server error")
+            }
+            else if let decoded = try? JSONDecoder().decode(Message.self, from: data){
+                DispatchQueue.main.async{
+                    print(decoded.Message)
+                }
+               return
+            }
+            else if let decoded = try? JSONDecoder().decode(Error.self, from: data){
+                print(decoded)
+                DispatchQueue.main.async{
+                    print(decoded.ErrorType)
+                }
+               return
+            }
+            else {
+                print("big time mess up")
             }
         }.resume()
     }

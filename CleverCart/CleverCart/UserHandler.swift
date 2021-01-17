@@ -11,7 +11,7 @@ import Foundation
 struct User: Codable {
     var username: String
     var password: String
-    var admin: Bool = false
+    var isAdmin: Bool = false
 }
 
 struct Admin: Decodable {
@@ -19,11 +19,16 @@ struct Admin: Decodable {
 }
 
 struct Message: Codable {
-    var message: String
+    var Message: String
 }
 
 struct Token: Codable {
     var token: String
+    var adminInfo: Bool
+}
+
+struct Error: Codable {
+    var ErrorType: String
 }
 
 class FetchToken: ObservableObject {
