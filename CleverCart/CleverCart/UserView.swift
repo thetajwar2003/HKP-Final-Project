@@ -56,7 +56,6 @@ struct UserView: View {
                return
             }
             else if let decoded = try? JSONDecoder().decode(Error.self, from: data){
-                print(decoded)
                 DispatchQueue.main.async{
                     print(decoded.ErrorType)
                 }
@@ -73,7 +72,6 @@ struct UserView: View {
         let url = URL(string: "https://storefronthkp.herokuapp.com/cart/view")! // BACKEND URL NEEDED -> /cart: returns a list of items
         var req = URLRequest(url: url)
         req.addValue("Bearer \(self.token.token!.token)", forHTTPHeaderField: "Authorization")
-        req.addValue("application/json", forHTTPHeaderField: "Content-Type")
         req.httpMethod = "GET"
         
         URLSession.shared.dataTask(with: req) { data, response, error in
@@ -93,27 +91,13 @@ struct UserView: View {
                return
             }
             else if let decoded = try? JSONDecoder().decode(Error.self, from: data){
-                print(decoded)
                 DispatchQueue.main.async{
                     print(decoded.ErrorType)
                 }
                return
             }
             else {
-                do {
-                          if let convertedJsonIntoDict = try JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary {
-                               
-                               // Print out entire dictionary
-                               print(convertedJsonIntoDict)
-                            print("items: \(self.cart.items)")
-                            print("cart: \(self.cart.cart)")
-                               
-                               
-                               
-                           }
-                } catch let error as NSError {
-                           print(error.localizedDescription)
-                 }
+                print("bigmess up in fetch cart")
             }
         }.resume()
     }

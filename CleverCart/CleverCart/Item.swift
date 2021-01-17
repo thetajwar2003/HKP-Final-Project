@@ -32,7 +32,6 @@ struct CartItem: Codable, Equatable, Hashable {
 }
 
 struct CartList: Codable {
-    var cart = [CartItem]()
     var items = [CartItem]()
 }
 

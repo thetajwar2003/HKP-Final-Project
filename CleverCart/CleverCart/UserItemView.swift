@@ -56,10 +56,8 @@ struct UserItemView: View {
     
     // updates the cart to remove the items in the api
     func updateCart(item: CartItem) {
-        let jsonifyCart = AddToCart(_id: item._id, quantity: item.quantity, removeItem: false)
-        
+        let jsonifyCart = AddToCart(_id: item.item, quantity: item.quantity, removeItem: false)
         guard let encoded = try? JSONEncoder().encode(jsonifyCart) else { return }
-        print(encoded)
         
         let url = URL(string: "https://storefronthkp.herokuapp.com/cart/addItem")!
         var req = URLRequest(url: url)
@@ -70,13 +68,15 @@ struct UserItemView: View {
         req.httpBody = encoded
         
         URLSession.shared.dataTask(with: req) { data, response, error in
+
             guard let data = data else {
                 print("\(error?.localizedDescription ?? "Unknown error")")
                 return
             }
             if let decoded = try? JSONDecoder().decode(NewCart.self, from: data) {
                 DispatchQueue.main.async {
-                    self.cart.cart = decoded.newCart.cart
+                    self.cart.items = decoded.newCart.cart
+                    print(self.cart.items)
                 }
             }
             else if let decoded = try? JSONDecoder().decode(Message.self, from: data){
@@ -86,7 +86,6 @@ struct UserItemView: View {
                return
             }
             else if let decoded = try? JSONDecoder().decode(Error.self, from: data){
-                print(decoded)
                 DispatchQueue.main.async{
                     print(decoded.ErrorType)
                 }
