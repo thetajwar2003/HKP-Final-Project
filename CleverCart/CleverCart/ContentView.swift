@@ -9,26 +9,19 @@
 import SwiftUI
 
 struct ContentView: View {
-    @EnvironmentObject var token: FetchToken
 
-    
+    @EnvironmentObject var token: FetchToken
+    @State var generatedToken: Token
     var body: some View {
-        ZStack {
-            if (token.token?.token != nil) {
-                if(token.token!.adminInfo) {
-                    AdminView()
-                }
-                else {
-                    UserView()
-                }
+        if (token.token != nil) {
+            if(token.isAdmin) {
+                AdminView()
             }
             else {
-                mainView
+                UserView()
             }
         }
-    }
-    var mainView: some View {
-        NavigationView {
+        return NavigationView {
             VStack {
                 Spacer()
                 Image("tree")
@@ -47,15 +40,15 @@ struct ContentView: View {
                     .frame(width: UIScreen.main.bounds.width * 0.8)
                     .multilineTextAlignment(.center)
                     .padding(4)
-
+                
                 Text("Your one stop shop for all your tree-related needs")
                     .font(.system(size: 16.0))
                     .frame(width: UIScreen.main.bounds.width * 0.8)
                     .multilineTextAlignment(.center)
                 Spacer()
-
-
-                NavigationLink(destination: LoginView()) {
+                
+                
+                NavigationLink(destination: LoginView(generatedToken: $generatedToken)) {
                     Text("Login")
                         .fontWeight(.black)
                         .foregroundColor(.green)
@@ -67,8 +60,8 @@ struct ContentView: View {
                         )
                         .padding(4)
                 }
-
-                NavigationLink(destination: SignUpView()){
+                
+                NavigationLink(destination: SignUpView(generatedToken: $generatedToken)){
                     Text("Sign Up")
                         .fontWeight(.black)
                         .frame(width: UIScreen.main.bounds.width * 0.75, height: UIScreen.main.bounds.width * 0.125)
@@ -77,8 +70,10 @@ struct ContentView: View {
                         .clipShape(Capsule())
                 }
                 Spacer()
+                
             }
-        }.accentColor( .green)
+        }
+        .accentColor( .green)
     }
 }
 

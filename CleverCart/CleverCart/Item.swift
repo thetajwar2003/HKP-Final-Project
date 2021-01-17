@@ -10,41 +10,26 @@ import Foundation
 import SwiftUI
 
 struct Item: Codable, Equatable, Hashable {
-    var __v: Int
-    var _id: String
-    var category: String
-    var description: String
+    var id: String
     var name: String
-    var photos: [String]
-    var price: Double
-//    var quantity: Int
-}
-
-struct Items: Codable {
-    var allItems = [Item]()
-}
-
-struct CartItem: Codable, Equatable, Hashable {
-    var _id: String
-    var item: String
-    var price: Double
+    var description: String
     var quantity: Int
 }
 
-struct CartList: Codable {
-    var cart = [CartItem]()
-    var items = [CartItem]()
-}
-
-struct Cart: Codable {
-    var _id: String
-    var username: String
-    var cart = [CartItem]()
-    var __v: Int
-}
-
-struct NewCart: Codable {
-    var newCart: Cart
+struct Items: Codable {
+    var items = [Item]()
+    
+    mutating func add(_ new: Item, num: Int) {
+        for (index, _) in items.enumerated() {
+            if items[index] == new {
+                items[index].quantity = num
+                return
+            }
+        }
+        var temp = new
+        temp.quantity = num
+        items.append(temp)
+    }
 }
 
 struct PostItem: Codable {
@@ -52,7 +37,6 @@ struct PostItem: Codable {
     var item: Item
 }
 struct PostCart: Codable {
-    var _id: String
-    var quantity: Int
-    var removeItem: Bool
+    var token: String
+    var cart: [Item]
 }
