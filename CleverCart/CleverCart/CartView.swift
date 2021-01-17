@@ -14,24 +14,36 @@ struct CartView: View {
     
     var body: some View {
         NavigationView {
-            Form {
-                Section {
-                    List {
-                        // list of item and its quantity
-                        ForEach (cart.items, id: \.id) { item in
-                            HStack {
-                                Text("\(item.name)")
-                                Text("\(item.quantity)")
-                            }
-                        }.onDelete(perform: removeItem)
-                    }
-                }
+            VStack {
+                Image(systemName: "cart")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 100, height: 100)
+                Text("Your Cart")
+                    .font(.largeTitle)
+                    .foregroundColor(.green)
+                    .bold()
+                Spacer()
                 
-                Section {
-                    Button("Checkout") {
-                        self.checkout()
-                    }
+                List {
+                    // list of item and its quantity
+                    ForEach (cart.items, id: \.id) { item in
+                        CartProductView(item: item)
+                    }.onDelete(perform: removeItem)
                 }
+                .frame(width: UIScreen.main.bounds.width * 0.9, height: UIScreen.main.bounds.height * 0.4)
+                Spacer()
+                
+                Button("Checkout") {
+                    checkout()
+                }
+                .foregroundColor(.white)
+                .font(.headline)
+                .padding()
+                .background(Color.green)
+                .clipShape(Capsule())
+                
+                Spacer()
             }
         }
     }
@@ -99,6 +111,41 @@ struct CartView: View {
                 print("No response from server")
             }
         }.resume()
+    }
+}
+
+struct CartProductView: View {
+    var item: Item
+    
+    var body: some View {
+        HStack {
+            Color.gray
+                .frame(width: 75, height: 75)
+                .padding(.trailing)
+            
+            VStack (alignment: .leading, spacing: 4) {
+                Text("\(item.name)")
+                    .font(.system(size: 20.0))
+                    .bold()
+//                Text("\(item.price)")
+                HStack {
+                    Text("QTY:")
+                  
+                    Image(systemName: "minus")
+                        .onTapGesture{
+                            print("quantity minus 1")
+                        }
+                        .foregroundColor(.green)
+                    Text("\(item.quantity)")
+                    
+                    Image(systemName: "plus")
+                        .onTapGesture{
+                            print("quantity minus 1")
+                        }
+                        .foregroundColor(.green)
+                }
+            }
+        }
     }
 }
 

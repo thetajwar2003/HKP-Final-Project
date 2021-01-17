@@ -34,6 +34,7 @@ struct AdminView: View {
         }, trailing: Button("Reload") {
             self.fetchItems()
         })
+        .accentColor(.green)
     }
     
     func fetchItems() {

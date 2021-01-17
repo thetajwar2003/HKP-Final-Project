@@ -15,15 +15,7 @@ struct AdminItemView: View {
         NavigationView {
             List {
                 ForEach(items.items, id: \.self) { item in
-                    HStack {
-                        //add image
-                        VStack {
-                            Text("\(item.name)")
-                                .font(.title)
-//                            Text("\(item.price)")
-                            Text("Quantity: \(item.quantity)")
-                        }
-                    }
+                    AdminProductView(item: item)
                 }
                 .onDelete(perform: removeItem)
             }
@@ -62,6 +54,27 @@ struct AdminItemView: View {
                 print("No response from server")
             }
         }.resume()
+    }
+}
+
+struct AdminProductView: View {
+    var item: Item
+    
+    var body: some View {
+        HStack {
+            Color.gray
+                .frame(width: 100, height: 100)
+                .padding(.trailing)
+            
+            VStack (alignment: .leading, spacing: 4) {
+                Text("\(item.name)")
+                    .font(.system(size: 20.0))
+                    .bold()
+//                            Text("\(item.price)")
+                    Text("QTY: \(item.quantity)")
+            }
+
+        }
     }
 }
 

@@ -17,26 +17,8 @@ struct UserItemView: View {
         NavigationView {
             List {
                 ForEach(items.items, id: \.self) { item in
-                    HStack {
-                        //add image
-                        VStack {
-                            Text("\(item.name)")
-                                .font(.title)
-            //                Text("\(item.price)")
-                            Text("Quantity: \(item.quantity)")
-                        }
-
-                        Spacer()
-
-                        Button("Add") {
-                            Image(systemName: "plus")
-                                .onTapGesture {
-                                    self.addItem(item: item)
-                                }
-                        }
-                    }
+                    UserProductView(item: item, addToCart: addItem(item: item))
                 }
-                
             }
             .navigationBarTitle("Shop")
         }
@@ -74,6 +56,60 @@ struct UserItemView: View {
                 print("No response from server")
             }
         }.resume()
+    }
+}
+
+struct UserProductView: View {
+    var item: Item
+    var addToCart: () //used to call function in UserItemView
+    @State private var qtyToCart = 1
+    @State private var addedToCart = false
+    
+    var body: some View {
+        
+        HStack {
+            Color.gray
+                .frame(width: 100, height: 100)
+                .padding(.trailing)
+            
+            VStack (alignment: .leading, spacing: 4) {
+                Text("\(item.name)")
+                    .font(.system(size: 20.0))
+                    .bold()
+//                            Text("\(item.price)")
+                HStack {
+                    Text("QTY:")
+                  
+                    Image(systemName: "minus")
+                        .onTapGesture{
+                            if qtyToCart > 1 {
+                                qtyToCart -= 1
+                            }
+                        }
+                        .foregroundColor(.gray)
+                    
+                    Text("\(qtyToCart)")
+                    
+                    Image(systemName: "plus")
+                        .onTapGesture{
+                            if qtyToCart < item.quantity {
+                                qtyToCart += 1
+                            }
+                        }
+                        .foregroundColor(.gray)
+                }
+            }
+
+            Spacer()
+
+            Image(systemName: addedToCart ? "cart.fill" : "cart")
+                .onTapGesture {
+                    self.addToCart
+                    addedToCart.toggle()
+                }
+                .padding()
+                .foregroundColor(.green)
+        }
     }
 }
 

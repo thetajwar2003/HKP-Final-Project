@@ -74,7 +74,7 @@ struct LoginView: View {
                 Spacer()
             }
         }
-        .accentColor( .black)
+        .accentColor(.green)
     }
     
     func verify() {
