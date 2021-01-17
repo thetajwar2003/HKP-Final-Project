@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct AdminItemView: View {
+    @EnvironmentObject var token: FetchToken
     @Binding var items: Items
     
     var body: some View {
@@ -32,22 +33,27 @@ struct AdminItemView: View {
     }
     
     func removeItem(at offsets: IndexSet) {
+        // this should take out the item the user wants to delete
+        offsets.sorted(by: > ).forEach { (i) in
+            updateItems(item: items.allItems[i])
+        }
         items.allItems.remove(atOffsets: offsets)
-        self.updateItems()
     }
     
-    func updateItems() {
-        let jsonifyItems = Items(allItems: items.allItems)
+    func updateItems(item: Item) {
+        var jsonifyItem = DeleteItem(_id: item._id)
+        guard let encoded = try? JSONEncoder().encode(jsonifyItem) else { return }
         
-        guard let encoded = try? JSONEncoder().encode(jsonifyItems) else { return }
-        
-        let url = URL(string: "")! // BACKEND PART item/remove
+        let url = URL(string: "https://storefronthkp.herokuapp.com/items/remove")! // BACKEND PART item/remove
         var req = URLRequest(url: url)
-        req.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        req.httpMethod = "POST"
+        req.addValue("Bearer \(self.token.token!.token)", forHTTPHeaderField: "Authorization")
+        req.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        req.httpMethod = "DELETE"
         req.httpBody = encoded
         
         URLSession.shared.dataTask(with: req) { data, response, error in
+            print(response)
+            print(error)
             guard let data = data else {
                 print("No response")
                 return
@@ -58,15 +64,28 @@ struct AdminItemView: View {
                     print(decoded.Message)
                 }
             }
+            else if let decoded = try? JSONDecoder().decode(Error.self, from: data){
+                print(decoded)
+                DispatchQueue.main.async{
+                    print("error: \(decoded.ErrorType)")
+                }
+               return
+            }
             else {
-                print("No response from server")
+                do {
+                          if let convertedJsonIntoDict = try JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary {
+                               
+                               // Print out entire dictionary
+                               print(convertedJsonIntoDict)
+                               
+                               
+                           }
+                } catch let error as NSError {
+                           print(error.localizedDescription)
+                 }
             }
         }.resume()
     }
 }
 
-//struct AdminItemView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        AdminItemView()
-//    }
-//}
+

@@ -27,7 +27,7 @@ struct Items: Codable {
 struct CartItem: Codable, Equatable, Hashable {
     var _id: String
     var item: String
-    var price: Double
+    var price: Int
     var quantity: Int
 }
 
@@ -47,11 +47,10 @@ struct NewCart: Codable {
     var newCart: Cart
 }
 
-struct PostItem: Codable {
-    var token: String
-    var item: Item
+struct DeleteItem: Codable {
+    var _id: String
 }
-struct PostCart: Codable {
+struct AddToCart: Codable {
     var _id: String
     var quantity: Int
     var removeItem: Bool

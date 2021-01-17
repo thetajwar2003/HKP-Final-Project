@@ -49,22 +49,23 @@ struct UserItemView: View {
     
     func addItem(item: Item) {
         // create an instance of cart item
-        let addItem = CartItem(_id: "", item: item._id, price: item.price, quantity: 1)
-        cart.cart.append(addItem)
+        let addItem = CartItem(_id: "", item: item._id, price: Int(item.price), quantity: 1)
+//        cart.cart.append(addItem)
         self.updateCart(item: addItem)
     }
     
     // updates the cart to remove the items in the api
     func updateCart(item: CartItem) {
-        let jsonifyCart = PostCart(_id: item._id, quantity: item.quantity, removeItem: false)
+        let jsonifyCart = AddToCart(_id: item._id, quantity: item.quantity, removeItem: false)
         
         guard let encoded = try? JSONEncoder().encode(jsonifyCart) else { return }
+        print(encoded)
         
         let url = URL(string: "https://storefronthkp.herokuapp.com/cart/addItem")!
         var req = URLRequest(url: url)
         req.addValue("Bearer \(self.token.token!.token)", forHTTPHeaderField: "Authorization")
         // might need app.json
-        req.addValue("application/xml", forHTTPHeaderField: "Content-Type")
+        req.addValue("application/json", forHTTPHeaderField: "Content-Type")
         req.httpMethod = "PUT"
         req.httpBody = encoded
         
