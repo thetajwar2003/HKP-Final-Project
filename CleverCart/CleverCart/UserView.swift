@@ -21,6 +21,7 @@ struct UserView: View {
                     Image(systemName: "list.dash")
                     Text("Store")
                 }
+            .onAppear{self.fetchItems()}
             
             // shows list of items in a user's cart
             CartView(cart: $cart)
@@ -29,27 +30,14 @@ struct UserView: View {
                     Text("Cart")
                 }
         }
-        // rhs button allows user to logout, lhs button allows user to refresh page
-        .navigationBarItems(leading: Button("Logout") {
-            self.token.token = nil
-        }, trailing: Button("Reload") {
-            self.fetchItems()
-            self.fetchCart()
-        })
     }
     
     // retrieves all the products in the store
     func fetchItems() {
-        guard let encoded = try? JSONEncoder().encode(token.token) else {
-            print("error encoding token")
-            return
-        }
-        
-        let url = URL(string: "")! // BACKEND URL NEEDED -> /items/get: returns a list of items
+        let url = URL(string: "https://storefronthkp.herokuapp.com/items/get/all")!
         var req = URLRequest(url: url)
-        req.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        req.httpMethod = "POST"
-        req.httpBody = encoded
+        req.addValue("Bearer \(self.token.token!.token)", forHTTPHeaderField: "Authorization")
+        req.httpMethod = "GET"
         
         URLSession.shared.dataTask(with: req) { data, response, error in
             guard let data = data else {
@@ -58,10 +46,24 @@ struct UserView: View {
             }
             if let decoded = try? JSONDecoder().decode(Items.self, from: data) {
                 DispatchQueue.main.async {
-                    self.items = decoded
+                    self.items.allItems = decoded.allItems
                 }
-            } else {
-                print("Server error")
+            }
+            else if let decoded = try? JSONDecoder().decode(Message.self, from: data){
+                DispatchQueue.main.async{
+                    print(decoded.Message)
+                }
+               return
+            }
+            else if let decoded = try? JSONDecoder().decode(Error.self, from: data){
+                print(decoded)
+                DispatchQueue.main.async{
+                    print(decoded.ErrorType)
+                }
+               return
+            }
+            else {
+                print("big time mess up")
             }
         }.resume()
     }
@@ -86,10 +88,21 @@ struct UserView: View {
             }
             if let decoded = try? JSONDecoder().decode(Items.self, from: data) {
                 DispatchQueue.main.async {
-                    self.cart = decoded
+                    self.cart.allItems = decoded.allItems
                 }
-            } else {
-                print("Server error")
+            }
+            else if let decoded = try? JSONDecoder().decode(Message.self, from: data){
+                DispatchQueue.main.async{
+                    print(decoded.Message)
+                }
+               return
+            }
+            else if let decoded = try? JSONDecoder().decode(Error.self, from: data){
+                print(decoded)
+                DispatchQueue.main.async{
+                    print(decoded.ErrorType)
+                }
+               return
             }
         }.resume()
     }

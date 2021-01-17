@@ -18,10 +18,10 @@ struct CartView: View {
                 Section {
                     List {
                         // list of item and its quantity
-                        ForEach (cart.items, id: \.id) { item in
+                        ForEach (cart.allItems, id: \._id) { item in
                             HStack {
                                 Text("\(item.name)")
-                                Text("\(item.quantity)")
+                                Text("\(item.price)")
                             }
                         }.onDelete(perform: removeItem)
                     }
@@ -38,13 +38,13 @@ struct CartView: View {
     
     // only removes the item from the list on user's device then calls api func
     func removeItem(at offsets: IndexSet) {
-        cart.items.remove(atOffsets: offsets)
+        cart.allItems.remove(atOffsets: offsets)
         self.updateCart()
     }
     
     // updates the cart to remove the items in the api
     func updateCart() {
-        let jsonifyCart = PostCart(token: self.token.token!.token, cart: self.cart.items)
+        let jsonifyCart = PostCart(token: self.token.token!.token, cart: self.cart.allItems)
         
         guard let encoded = try? JSONEncoder().encode(jsonifyCart) else { return }
         
@@ -74,7 +74,7 @@ struct CartView: View {
     
     // allows the user to checkout and empties the cart
     func checkout() {
-        let jsonifyCart = PostCart(token: self.token.token!.token, cart: self.cart.items)
+        let jsonifyCart = PostCart(token: self.token.token!.token, cart: self.cart.allItems)
         
         guard let encoded = try? JSONEncoder().encode(jsonifyCart) else { return }
         

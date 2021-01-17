@@ -17,7 +17,6 @@ struct SignUpView: View {
     @State private var reEnterPass = ""
     
     @State private var user: User?
-    @State private var admin = false
     
     @State private var alertTitle = ""
     @State private var alertMessage = ""
@@ -65,12 +64,6 @@ struct SignUpView: View {
                         )
                         .padding(4)
                     
-                    Toggle(isOn: $admin){
-                        Text("Admin")
-                            .padding(.leading)
-                    }
-                    .frame(width: UIScreen.main.bounds.width * 0.8)
-                    .padding(4)
                 
                     
                 Button("Sign Up") {
@@ -97,7 +90,7 @@ struct SignUpView: View {
         func createUser() -> Bool {
             guard !self.username.trimmingCharacters(in: .whitespaces).isEmpty && !self.password.trimmingCharacters(in: .whitespaces).isEmpty else { return false }
             guard self.password == self.reEnterPass else { return false }
-            user = User(username: self.username, password: self.password, isAdmin: self.admin)
+            user = User(username: self.username, password: self.password, isAdmin: false)
             return true
         }
         

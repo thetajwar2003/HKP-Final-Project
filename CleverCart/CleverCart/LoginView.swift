@@ -114,7 +114,7 @@ struct LoginView: View {
             if let decoded = try? JSONDecoder().decode(Token.self, from: data) {
                 DispatchQueue.main.async {
                     self.token.token = Token(token: decoded.token, adminInfo: decoded.adminInfo)
-
+                    print(decoded)
                     if(self.token.token?.token != nil){
                         self.presentationMode.wrappedValue.dismiss()
                     }
@@ -133,7 +133,6 @@ struct LoginView: View {
             
             // something went supa wrong
             else if let decoded = try? JSONDecoder().decode(Error.self, from: data){
-                print(decoded)
                 DispatchQueue.main.async{
                     self.alertTitle = "User could not be created"
                     self.alertMessage = "\(decoded.ErrorType)"
