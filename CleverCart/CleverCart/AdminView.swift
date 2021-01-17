@@ -38,7 +38,6 @@ struct AdminView: View {
     
     // retrieves all the products in the store
     func fetchItems() {
-        print("here admin view")
         let url = URL(string: "https://storefronthkp.herokuapp.com/items/get/all")!
         var req = URLRequest(url: url)
         req.addValue("Bearer \(self.token.token!.token)", forHTTPHeaderField: "Authorization")

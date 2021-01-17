@@ -10,7 +10,7 @@ import SwiftUI
 
 struct UserView: View {
     @EnvironmentObject var token: FetchToken
-    @State private var cart = Items()
+    @State private var cart = CartList()
     @State private var items = Items()
     
     var body: some View {
@@ -28,7 +28,7 @@ struct UserView: View {
                 .tabItem {
                     Image(systemName: "cart.fill")
                     Text("Cart")
-                }
+                }.onAppear{self.fetchCart()}
         }
     }
     
@@ -70,25 +70,19 @@ struct UserView: View {
     
     // retrieves the items inside the cart and sets it to the cart property
     func fetchCart() {
-        guard let encoded = try? JSONEncoder().encode(token.token) else {
-            print("error encoding token")
-            return
-        }
-        
-        let url = URL(string: "")! // BACKEND URL NEEDED -> /cart: returns a list of items
+        let url = URL(string: "https://storefronthkp.herokuapp.com/cart/view")! // BACKEND URL NEEDED -> /cart: returns a list of items
         var req = URLRequest(url: url)
-        req.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        req.httpMethod = "POST"
-        req.httpBody = encoded
+        req.addValue("Bearer \(self.token.token!.token)", forHTTPHeaderField: "Authorization")
+        req.httpMethod = "GET"
         
         URLSession.shared.dataTask(with: req) { data, response, error in
             guard let data = data else {
                 print("\(error?.localizedDescription ?? "Unknown error")")
                 return
             }
-            if let decoded = try? JSONDecoder().decode(Items.self, from: data) {
+            if let decoded = try? JSONDecoder().decode(CartList.self, from: data) {
                 DispatchQueue.main.async {
-                    self.cart.allItems = decoded.allItems
+                    self.cart.cart = decoded.items
                 }
             }
             else if let decoded = try? JSONDecoder().decode(Message.self, from: data){
@@ -103,6 +97,20 @@ struct UserView: View {
                     print(decoded.ErrorType)
                 }
                return
+            }
+            else {
+                do {
+                          if let convertedJsonIntoDict = try JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary {
+                               
+                               // Print out entire dictionary
+                               print(convertedJsonIntoDict)
+                               
+                               
+                               
+                           }
+                } catch let error as NSError {
+                           print(error.localizedDescription)
+                 }
             }
         }.resume()
     }

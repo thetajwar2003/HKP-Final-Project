@@ -66,7 +66,7 @@ struct AddItemView: View {
             .navigationBarTitle(Text("Add Item"))
             .navigationBarItems(trailing:
                 Button("Save") {
-                    let newItem = Item(__v: 0, _id: self.id, category: self.category, description: self.details, name: self.name, photos: [], price: Int(self.price)!)
+                    let newItem = Item(__v: 0, _id: self.id, category: self.category, description: self.details, name: self.name, photos: [], price: Double(self.price)!)
                     
                     self.addItem(item: newItem)
                 }

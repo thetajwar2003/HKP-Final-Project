@@ -11,29 +11,27 @@ import SwiftUI
 struct UserItemView: View {
     @EnvironmentObject var token: FetchToken
     @Binding var items: Items
-    @Binding var cart: Items
+    @Binding var cart: CartList
     
     var body: some View {
         NavigationView {
             List {
-                ForEach(items.allItems, id: \.self) { item in
+                ForEach(items.allItems, id: \._id) { item in
                     HStack {
                         //add image
                         VStack {
                             Text("\(item.name)")
                                 .font(.title)
                             Text("\(item.price)")
+                            //may have to hardcode quantity
 //                            Text("Quantity: \(item.quantity)")
                         }
 
                         Spacer()
-
-                        Button("Add") {
-                            Image(systemName: "plus")
-                                .onTapGesture {
-                                    self.addItem(item: item)
-                                }
-                        }
+                        Image(systemName: "plus")
+                            .onTapGesture {
+                                self.addItem(item: item)
+                            }
                     }
                 }
                 
@@ -50,38 +48,56 @@ struct UserItemView: View {
     }
     
     func addItem(item: Item) {
-        cart.allItems.append(item)
-        self.updateCart()
+        // create an instance of cart item
+        let addItem = CartItem(_id: "", item: item._id, price: item.price, quantity: 1)
+        cart.cart.append(addItem)
+        self.updateCart(item: addItem)
     }
     
     // updates the cart to remove the items in the api
-    func updateCart() {
-        let jsonifyCart = PostCart(token: self.token.token!.token, cart: self.cart.allItems)
+    func updateCart(item: CartItem) {
+        let jsonifyCart = PostCart(_id: item._id, quantity: item.quantity, removeItem: false)
         
         guard let encoded = try? JSONEncoder().encode(jsonifyCart) else { return }
         
-        let url = URL(string: "")! // BACKEND PART cart/remove
+        let url = URL(string: "https://storefronthkp.herokuapp.com/cart/addItem")!
         var req = URLRequest(url: url)
-        req.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        req.httpMethod = "POST"
+        req.addValue("Bearer \(self.token.token!.token)", forHTTPHeaderField: "Authorization")
+        // might need app.json
+        req.addValue("application/xml", forHTTPHeaderField: "Content-Type")
+        req.httpMethod = "PUT"
         req.httpBody = encoded
         
         URLSession.shared.dataTask(with: req) { data, response, error in
             guard let data = data else {
-                print("No response")
+                print("\(error?.localizedDescription ?? "Unknown error")")
                 return
             }
-            
-            if let decoded = try? JSONDecoder().decode(Message.self, from: data) {
+            if let decoded = try? JSONDecoder().decode(NewCart.self, from: data) {
                 DispatchQueue.main.async {
-                    print(decoded.Message)
+                    self.cart.cart = decoded.newCart.cart
                 }
             }
+            else if let decoded = try? JSONDecoder().decode(Message.self, from: data){
+                DispatchQueue.main.async{
+                    print(decoded.Message)
+                }
+               return
+            }
+            else if let decoded = try? JSONDecoder().decode(Error.self, from: data){
+                print(decoded)
+                DispatchQueue.main.async{
+                    print(decoded.ErrorType)
+                }
+               return
+            }
             else {
-                print("No response from server")
+                print("big time mess up in adding item to cart")
             }
         }.resume()
     }
+    
+    
     // TODO THIS IS A REPEATED FUNCTION MODULARIZE LATER
     // retrieves all the products in the store
     func fetchItems() {
