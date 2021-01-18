@@ -35,7 +35,7 @@ struct ContentView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: UIScreen.main.bounds.width/2, height: UIScreen.main.bounds.width/2)
-                Text("Tree Store")
+                Text("Agora")
                     .font(.largeTitle)
                     .fontWeight(.black)
                     .foregroundColor(Color.green)

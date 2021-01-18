@@ -17,18 +17,38 @@ struct AdminItemView: View {
             List {
                 ForEach(items.allItems, id: \._id) { item in
                     HStack {
-                        //add image
-                        VStack {
+            //            Uncomment for functional pictures if item.photos had the urls to jpg files
+            //            if item.photos != [] {
+            //                Image(systemName: "photo")
+            //                    .data(url: URL(string: item.photos[0])!)
+            //                    .frame(width: 100, height: 100)
+            //                    .padding(.trailing)
+            //            } else {
+                        Image(systemName: "photo")
+                            .data(url: URL(string: "https://picsum.photos/200")!)
+                            .frame(width: 100, height: 100)
+                            .padding(.trailing)
+            //            }
+                        
+                        VStack (alignment: .leading, spacing: 4) {
                             Text("\(item.name)")
-                                .font(.title)
-                            Text("\(item.price)")
-//                            Text("Quantity: \(item.quantity)")
+                                .font(.system(size: 20.0))
+                                .bold()
+                            Text(String(format: "$%.2f", item.price))
+            //                    Text("QTY: \(item.quantity)")
                         }
+
                     }
                 }
                 .onDelete(perform: removeItem)
             }
             .navigationBarTitle("Shop")
+            // rhs button allows user to logout, lhs button allows user to refresh page
+            .navigationBarItems(leading: Button("Logout") {
+                self.token.token = nil
+            }, trailing: Button("Reload") {
+                self.fetchItems()
+            })
         }
     }
     
@@ -42,7 +62,7 @@ struct AdminItemView: View {
     
     func updateItems(item: Item) {
         var jsonifyItem = DeleteItem(_id: item._id)
-        guard let encoded = try? JSONEncoder().encode(jsoni) else { return }
+        guard let encoded = try? JSONEncoder().encode(jsonifyItem) else { return }
         
         let url = URL(string: "https://storefronthkp.herokuapp.com/items/remove")! // BACKEND PART item/remove
         var req = URLRequest(url: url)
@@ -86,6 +106,40 @@ struct AdminItemView: View {
             }
         }.resume()
     }
+    
+    // retrieves all the products in the store
+    func fetchItems() {
+        let url = URL(string: "https://storefronthkp.herokuapp.com/items/get/all")!
+        var req = URLRequest(url: url)
+        req.addValue("Bearer \(self.token.token!.token)", forHTTPHeaderField: "Authorization")
+        req.httpMethod = "GET"
+        
+        URLSession.shared.dataTask(with: req) { data, response, error in
+            guard let data = data else {
+                print("\(error?.localizedDescription ?? "Unknown error")")
+                return
+            }
+            if let decoded = try? JSONDecoder().decode(Items.self, from: data) {
+                DispatchQueue.main.async {
+                    self.items.allItems = decoded.allItems
+                }
+            }
+            else if let decoded = try? JSONDecoder().decode(Message.self, from: data){
+                DispatchQueue.main.async{
+                    print(decoded.Message)
+                }
+               return
+            }
+            else if let decoded = try? JSONDecoder().decode(Error.self, from: data){
+                print(decoded)
+                DispatchQueue.main.async{
+                    print(decoded.ErrorType)
+                }
+               return
+            }
+            else {
+                print("big time mess up")
+            }
+        }.resume()
+    }
 }
-
-

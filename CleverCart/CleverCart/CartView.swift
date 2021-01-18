@@ -14,26 +14,54 @@ struct CartView: View {
     
     var body: some View {
         NavigationView {
-            Form {
-                Section {
-                    List {
-                        // list of item and its quantity
-                        ForEach (cart.items, id: \._id) { item in
-                            HStack {
-                                Text("\(item._id)")
-                                Text("\(item.price)")
-                                Text("\(item.quantity)")
+            VStack {
+                Image(systemName: "cart")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 100, height: 100)
+                Text("Your Cart")
+                    .font(.largeTitle)
+                    .foregroundColor(.green)
+                    .bold()
+                Spacer()
+                List {
+                    ForEach(cart.items, id: \._id) { item in
+                        HStack {
+//                            if item.photos != [] {
+//                                Image(systemName: "photo")
+//                                    .data(url: URL(string: item.photos[0])!)
+//                                    .frame(width: 75, height: 75)
+//                                    .padding(.trailing)
+//                            } else {
+                            Image(systemName: "photo")
+                                .data(url: URL(string: "https://picsum.photos/200")!)
+                                .frame(width: 75, height: 75)
+                                .padding(.trailing)
+//                            }
+                            
+                            VStack (alignment: .leading, spacing: 4) {
+                                Text("\(item.item)")
+                                    .font(.system(size: 18.0))
+                                    .bold()
+                                Text("$\(item.price).00")
+                                Text("QTY: \(item.quantity)")
                             }
-                        }.onDelete(perform: removeItem)
-                    }
+                        }//HSTACK
+                    }.onDelete(perform: removeItem)
+                }//LIST
+                .frame(width: UIScreen.main.bounds.width * 0.9, height: UIScreen.main.bounds.height * 0.4)
+                Spacer()
+                Button("Checkout") {
+                    self.checkout()
                 }
-                
-                Section {
-                    Button("Checkout") {
-                        self.checkout()
-                    }
-                }
-            }
+                .foregroundColor(.white)
+                .font(.headline)
+                .padding()
+                .background(Color.green)
+                .clipShape(Capsule())
+
+                Spacer()
+            }//VSTACK
             .navigationBarItems(leading: Button("Logout") {
                 // TODO FIX LOGOUT
                 self.token.token = Token(token: "", adminInfo: false)
@@ -41,6 +69,7 @@ struct CartView: View {
                 self.fetchCart()
             })
         }
+        .accentColor(.green)
     }
     
     // only removes the item from the list on user's device then calls api func
@@ -160,3 +189,9 @@ struct CartView: View {
     }
 }
 
+
+struct CartView_Previews: PreviewProvider {
+    static var previews: some View {
+        /*@START_MENU_TOKEN@*/Text("Hello, World!")/*@END_MENU_TOKEN@*/
+    }
+}

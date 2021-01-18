@@ -28,12 +28,7 @@ struct AdminView: View {
                     Text("Add Item")
                 }
         }
-        // rhs button allows user to logout, lhs button allows user to refresh page
-        .navigationBarItems(leading: Button("Logout") {
-            self.token.token = nil
-        }, trailing: Button("Reload") {
-            self.fetchItems()
-        })
+        .accentColor(.green)
     }
     
     // retrieves all the products in the store
@@ -73,3 +68,9 @@ struct AdminView: View {
     }
 }
 
+
+struct AdminView_Previews: PreviewProvider {
+    static var previews: some View {
+        /*@START_MENU_TOKEN@*/Text("Hello, World!")/*@END_MENU_TOKEN@*/
+    }
+}

@@ -30,6 +30,7 @@ struct UserView: View {
                     Text("Cart")
                 }.onAppear{self.fetchCart()}
         }
+        .accentColor(.green)
     }
     
     // retrieves all the products in the store

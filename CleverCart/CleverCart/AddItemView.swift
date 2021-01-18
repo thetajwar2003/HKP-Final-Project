@@ -24,44 +24,76 @@ struct AddItemView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Button(action: {
-                    self.showingImagePicker = true
-                }) {
-                    ZStack {
-                        Color.gray
-                            .frame(width: 300, height: 200)
-                        
-                        if inputImage != nil {
-                            Image(uiImage: inputImage ?? UIImage())
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 300, height: 200)
+                HStack (alignment: .top){
+                    //IMAGE START
+                    Button(action: {
+                        self.showingImagePicker = true
+                    }) {
+                        ZStack {
+                            Color.gray
+                                .frame(width: 150, height: 150)
+                            
+                            if inputImage != nil {
+                                Image(uiImage: inputImage ?? UIImage())
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 150, height: 150)
+                                    .clipped()
+                            }
+                            else {
+                                Text("Add a photo")
+                                    .foregroundColor(Color.white)
+                            }
                         }
-                        else {
-                            Text("Click to add a photo")
-                                .foregroundColor(Color.white)
-                        }
+                        .padding()
                     }
-                    .padding()
-                }
-                .sheet(isPresented: $showingImagePicker) {
-                    ImagePicker(image: self.$inputImage)
-                }
-                
-                
-                Form {
-                    Section(header: Text("Info")) {
+                    .sheet(isPresented: $showingImagePicker) {
+                        ImagePicker(image: self.$inputImage)
+                    }
+                    //IMAGE END
+                    
+                    VStack {
                         TextField("Name", text: $name)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .padding(.top)
                         TextField("Price", text: $price)
-                        TextField("Details", text: $details)
-                        TextField("Category", text: $category)
-                    }
-                    Section(header: Text("Quantity")) {
-                        Stepper(value: $quantity, in: 1...10, step: 1) {
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .padding(.bottom)
+                        Text("QTY")
+                        HStack {
+                            Image(systemName: "minus")
+                                .onTapGesture{
+                                    quantity -= 1
+                                }
+                                .foregroundColor(.gray)
+                            
                             Text("\(quantity)")
+                            
+                            Image(systemName: "plus")
+                                .onTapGesture{
+                                    quantity += 1
+                                }
+                                .foregroundColor(.gray)
                         }
                     }
+                    .padding(.trailing)
+                } //END OF HEADER SECTION
+                
+                Text("Description")
+                if #available(iOS 14.0, *) {
+                    TextEditor(text: $details)
+                        .foregroundColor(.black)
+                        .border(Color.gray)
+                        .frame(width: UIScreen.main.bounds.width * 0.9, height: UIScreen.main.bounds.height/3)
+                } else {
+                    // Fallback on earlier versions
+                    TextField("Description", text: $details)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .frame(width: UIScreen.main.bounds.width * 0.9, height: UIScreen.main.bounds.height/3)
                 }
+                
+                Spacer()
+
             }
             .navigationBarTitle(Text("Add Item"))
             .navigationBarItems(trailing:
@@ -70,6 +102,7 @@ struct AddItemView: View {
                     
                     self.addItem(item: newItem)
                 }
+                    .foregroundColor(.green)
             )
         }
     }
@@ -85,7 +118,7 @@ struct AddItemView: View {
         
         guard let encoded = try? JSONEncoder().encode(jsonifyItems) else { return }
         
-        let url = URL(string: "")! // BACKEND PART items/add
+        let url = URL(string: "https://storefronthkp.herokuapp.com/items/upload")! // BACKEND PART items/add
         var req = URLRequest(url: url)
         req.setValue("application/json", forHTTPHeaderField: "Content-Type")
         req.httpMethod = "POST"

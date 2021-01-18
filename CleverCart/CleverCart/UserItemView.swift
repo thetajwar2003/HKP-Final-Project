@@ -18,23 +18,36 @@ struct UserItemView: View {
             List {
                 ForEach(items.allItems, id: \._id) { item in
                     HStack {
-                        //add image
-                        VStack {
+            //            Uncomment for functional pictures if item.photos had the urls to jpg files
+            //            if item.photos != [] {
+            //                Image(systemName: "photo")
+            //                    .data(url: URL(string: item.photos[0])!)
+            //                    .frame(width: 100, height: 100)
+            //                    .padding(.trailing)
+            //            } else {
+                        Image(systemName: "photo")
+                            .data(url: URL(string: "https://picsum.photos/200")!)
+                            .frame(width: 100, height: 100)
+                            .padding(.trailing)
+            //            }
+                        
+                        VStack (alignment: .leading, spacing: 4) {
                             Text("\(item.name)")
-                                .font(.title)
-                            Text("\(item.price)")
-                            //may have to hardcode quantity
-//                            Text("Quantity: \(item.quantity)")
+                                .font(.system(size: 20.0))
+                                .bold()
+                            Text(String(format: "$%.2f", item.price))
                         }
 
                         Spacer()
-                        Image(systemName: "plus")
+
+                        Image(systemName: "cart")
                             .onTapGesture {
                                 self.addItem(item: item)
                             }
+                            .padding()
+                            .foregroundColor(.green)
                     }
                 }
-                
             }
             .navigationBarTitle("Shop")
             // rhs button allows user to logout, lhs button allows user to refresh page
@@ -45,6 +58,7 @@ struct UserItemView: View {
                 self.fetchItems()
             })
         }
+        .accentColor(.green)
     }
     
     func addItem(item: Item) {
