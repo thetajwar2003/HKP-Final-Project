@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct AddItemView: View {
+    @EnvironmentObject var token: FetchToken
     @Binding var items: Items
     @State private var showingImagePicker = false
     
@@ -75,43 +76,127 @@ struct AddItemView: View {
     }
     
     func addItem(item: Item) {
-        items.allItems.append(item)
-        self.updateItems()
+//        items.allItems.append(item)
+//        self.updateItems()
+        let url = "https://storefronthkp.herokuapp.com/items/upload"
+        let bundlePath = Bundle.main.path(forResource: self.name, ofType: "jpeg")!
+        let img = UIImage(contentsOfFile: bundlePath)!
+        let data: Data = img.jpegData(compressionQuality: 1)!
+        
+        self.updateItems(urlPath: url, fileName: "\(self.name).jpeg", data: data)
     }
     
     // updates items to add the new item in the api
-    func updateItems() {
-        let jsonifyItems = self.items
+    func updateItems(urlPath:String, fileName:String, data:Data){
+        let formFields = ["name": self.name, "price": self.price, "description": self.details]
         
-        guard let encoded = try? JSONEncoder().encode(jsonifyItems) else { return }
-        
-        let url = URL(string: "")! // BACKEND PART items/add
+        let url = URL(string: urlPath)!
         var req = URLRequest(url: url)
-        req.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        req.httpMethod = "POST"
-        req.httpBody = encoded
+        
+        let boundary = "Boundary-\(UUID().uuidString)"
+        let fullData = photoDataToFormData(data: data,boundary: boundary,fileName: fileName)
+
+        
+        req.addValue("Bearer \(self.token.token!.token)", forHTTPHeaderField: "Authorization")
+        req.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        req.httpMethod = "PUT"
+        req.setValue(String(fullData.count), forHTTPHeaderField: "Content-Length")
+        
+        let httpBody = NSMutableData()
+        for (key, value) in formFields {
+            httpBody.appendString(convertFormField(named: key, value: value, using: boundary))
+        }
+        httpBody.append(fullData)
+        
+        httpBody.appendString("--\(boundary)--")
+
+        req.httpBody = httpBody as Data
+
+        print(String(data: httpBody as Data, encoding: .utf8)!)
+
         
         URLSession.shared.dataTask(with: req) { data, response, error in
+            print(response)
             guard let data = data else {
                 print("No response")
                 return
             }
             
-            if let decoded = try? JSONDecoder().decode(Items.self, from: data) {
-                DispatchQueue.main.async {
-                    print(decoded)
-                    self.items = decoded
+            if let decoded = try? JSONDecoder().decode(Message.self, from: data){
+                DispatchQueue.main.async{
+                    print(decoded.Message)
                 }
+               return
+            }
+            else if let decoded = try? JSONDecoder().decode(Error.self, from: data){
+                DispatchQueue.main.async{
+                    print(decoded.ErrorType)
+                }
+               return
             }
             else {
-                print("No response from server")
+                do {
+                          if let convertedJsonIntoDict = try JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary {
+                               
+                               // Print out entire dictionary
+                               print(convertedJsonIntoDict)
+                               
+                           }
+                } catch let error as NSError {
+                           print(error.localizedDescription)
+                 }
             }
         }.resume()
     }
+    
+    func convertFormField(named name: String, value: String, using boundary: String) -> String {
+      var fieldString = "--\(boundary)\r\n"
+      fieldString += "Content-Disposition: form-data; name=\"\(name)\"\r\n"
+      fieldString += "\r\n"
+      fieldString += "\(value)\r\n"
+
+      return fieldString
+    }
+    
+    func photoDataToFormData(data:Data,boundary:String,fileName:String) -> Data {
+        var fullData = NSMutableData()
+
+        // 1 - Boundary should start with --
+        let lineOne = "--" + boundary + "\r\n"
+        fullData.append(lineOne.data(
+            using: String.Encoding.utf8,
+            allowLossyConversion: false)!)
+
+        // 2
+        let lineTwo = "Content-Disposition: form-data; name=\"image\"; filename=\"" + fileName + "\"\r\n"
+        NSLog(lineTwo)
+        fullData.append(lineTwo.data(
+            using: String.Encoding.utf8,
+            allowLossyConversion: false)!)
+
+        // 3
+        let lineThree = "Content-Type: image/jpg\r\n\r\n"
+        fullData.append(lineThree.data(
+            using: String.Encoding.utf8,
+            allowLossyConversion: false)!)
+
+        // 4
+        fullData.append(data as Data)
+
+        // 5
+        let lineFive = "\r\n"
+        fullData.append(lineFive.data(
+            using: String.Encoding.utf8,
+            allowLossyConversion: false)!)
+
+//        // 6 - The end. Notice -- at the start and at the end
+//        let lineSix = "--" + boundary + "--\r\n"
+//        fullData.append(lineSix.data(
+//            using: String.Encoding.utf8,
+//            allowLossyConversion: false)!)
+
+        return fullData as Data
+    }
+
 }
 
-//struct AddItemView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        AddItemView(items: Items())
-//    }
-//}

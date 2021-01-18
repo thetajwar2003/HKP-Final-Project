@@ -37,12 +37,12 @@ struct AdminItemView: View {
         offsets.sorted(by: > ).forEach { (i) in
             updateItems(item: items.allItems[i])
         }
-        items.allItems.remove(atOffsets: offsets)
+//        items.allItems.remove(atOffsets: offsets)
     }
     
     func updateItems(item: Item) {
-        var jsonifyItem = DeleteItem(_id: item._id)
-        guard let encoded = try? JSONEncoder().encode(jsoni) else { return }
+        let jsonifyItem = DeleteItem(_id: item._id)
+        guard let encoded = try? JSONEncoder().encode(jsonifyItem) else { return }
         
         let url = URL(string: "https://storefronthkp.herokuapp.com/items/remove")! // BACKEND PART item/remove
         var req = URLRequest(url: url)

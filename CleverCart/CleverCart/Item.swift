@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import SwiftUI
 
 struct Item: Codable, Equatable, Hashable {
     var __v: Int
@@ -53,4 +52,12 @@ struct AddToCart: Codable {
     var _id: String
     var quantity: Int
     var removeItem: Bool
+}
+
+extension NSMutableData {
+  func appendString(_ string: String) {
+    if let data = string.data(using: .utf8) {
+      self.append(data)
+    }
+  }
 }
