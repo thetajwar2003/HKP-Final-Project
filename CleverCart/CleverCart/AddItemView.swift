@@ -17,7 +17,6 @@ struct AddItemView: View {
     @State private var details = ""
     @State private var inputImage: UIImage?
     @State private var quantity = 1
-    @State private var category = ""
 
     let id = UUID().uuidString
     
@@ -98,7 +97,7 @@ struct AddItemView: View {
             .navigationBarTitle(Text("Add Item"))
             .navigationBarItems(trailing:
                 Button("Save") {
-                    let newItem = Item(__v: 0, _id: self.id, category: self.category, description: self.details, name: self.name, photos: [], price: Double(self.price)!)
+                    let newItem = Item(id: self.id, name: self.name, description: self.details, quantity: self.quantity)
                     
                     self.addItem(item: newItem)
                 }
@@ -108,7 +107,7 @@ struct AddItemView: View {
     }
     
     func addItem(item: Item) {
-        items.allItems.append(item)
+        items.items.append(item)
         self.updateItems()
     }
     

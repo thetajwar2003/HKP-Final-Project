@@ -15,7 +15,7 @@ struct AdminItemView: View {
     var body: some View {
         NavigationView {
             List {
-                ForEach(items.allItems, id: \._id) { item in
+                ForEach(items.items, id: \.self) { item in
                     HStack {
             //            Uncomment for functional pictures if item.photos had the urls to jpg files
             //            if item.photos != [] {
@@ -53,6 +53,7 @@ struct AdminItemView: View {
     }
     
     func removeItem(at offsets: IndexSet) {
+
         // this should take out the item the user wants to delete
         offsets.sorted(by: > ).forEach { (i) in
             updateItems(item: items.allItems[i])
@@ -81,7 +82,7 @@ struct AdminItemView: View {
             
             if let decoded = try? JSONDecoder().decode(Message.self, from: data) {
                 DispatchQueue.main.async {
-                    print(decoded.Message)
+                    print(decoded.message)
                 }
             }
             else if let decoded = try? JSONDecoder().decode(Error.self, from: data){
